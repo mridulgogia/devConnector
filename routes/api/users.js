@@ -11,12 +11,18 @@ const User = require('../../models/User');
 
 const passport = require('passport');
 
-// router.get('/test', (req, res) => res.json({
-//     msg: "Users works"
-// }));
+const validateRegisterInput = require('../../validation/register');
+const validateLoginInut = require('../../validation/login');
+
+router.get('/test', (req, res) => res.json({
+    msg: "Users works"
+}));
 
 router.post('/register', (req, res) => {
-    const {name, email, password } = req.body;
+    const {errors, isValid} = validateRegisterInput(req.body);
+if(!isValid) return res.status(400).json(errors);
+
+const {name, email, password } = req.body;
     User.findOne({
         email: email
     })
@@ -51,14 +57,20 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
+    const {errors, isValid} = validateRegisterInput(req.body);
+    if(!isValid) return res.status(400).json(errors);
+
+   
     const { email, password} = req.body;
 
     User.findOne({
         email
     })
     .then( user => {
-        if(!user) return res.status(404).json({email: 'User not found'})
-        
+        if(!user) {
+            errors.email = 'User not found';
+            return res.status(404).json({errors});
+        }
         bcrypt.compare(password, user.password)
             .then(isMatch => {
                 if(isMatch) {
@@ -83,9 +95,8 @@ router.post('/login', (req, res) => {
                         }
                     );
                 } else {
-                     res.status(400).json({
-                        password: 'Password incorrect'
-                    });
+                    errors.password = 'Password incorrect'
+                     res.status(400).json({ errors });
                 }
             })
     });
