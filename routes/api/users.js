@@ -12,7 +12,7 @@ const User = require('../../models/User');
 const passport = require('passport');
 
 const validateRegisterInput = require('../../validation/register');
-const validateLoginInut = require('../../validation/login');
+const validateLoginInput = require('../../validation/login');
 
 router.get('/test', (req, res) => res.json({
     msg: "Users works"
@@ -57,7 +57,7 @@ const {name, email, password } = req.body;
 });
 
 router.post('/login', (req, res) => {
-    const {errors, isValid} = validateRegisterInput(req.body);
+    const {errors, isValid} = validateLoginInput(req.body);
     if(!isValid) return res.status(400).json(errors);
 
    
