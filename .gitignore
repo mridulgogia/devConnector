@@ -3,3 +3,5 @@
 /config/keys.js
 
 /yarn.lock
+
+/client/node_modules
