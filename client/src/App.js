@@ -25,6 +25,8 @@ import AddExperience from "./components/add-credentials/AddExperience";
 import AddEducation from "./components/add-credentials/AddEducation";
 import Profiles from "./components/profiles/Profiles";
 import Profile from "./components/profile/Profile";
+import Post from "./components/post/Post";
+import Posts from "./components/posts/Posts";
 import NotFound from "./components/not-found/NotFound";
 
 import { setCurrentUser, logoutUser } from "./actions/authAction";
@@ -44,7 +46,6 @@ class App extends Component {
         store.dispatch(logoutUser());
 
         store.dispatch(clearCurrentProfile());
-
         this.props.history.push("/login");
       }
     }
@@ -93,6 +94,13 @@ class App extends Component {
                   component={AddEducation}
                 />
               </Switch>
+              <Switch>
+                <PrivateRoute exact path="/feed" component={Posts} />
+              </Switch>
+              <Switch>
+                <PrivateRoute exact path="/post/:id" component={Post} />
+              </Switch>
+
               <Route exact path="/not-found" component={NotFound} />
             </div>
             <Footer />
